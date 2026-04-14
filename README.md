@@ -334,3 +334,79 @@ Web 本地开发时，常见文件位置：
 - 根目录旧文档里曾出现过“React”之类的历史描述，但当前实际前端是 Vue 3。
 - 桌面端当前是 Windows-first，打包脚本默认面向 Windows 安装包与 portable 包。
 - 如果桌面版提示找不到前端资源，优先检查是否已经在 `desktop/` 目录执行过 `npm run build:frontend`。
+
+---
+
+# 密钥配置指导-功能简介
+## 写在功能简介前面
+桌面版就是网页版的加了个壳子，本质上运行web端和桌面exe功能都是一样的。使用配置密钥和功能简介我就以web端为例。
+在开发的过程中可以现在web端调试出你喜欢的样式后运行根目录的`package-desktop.ps1`脚本就会在`desktop/release`生成对应的可执行文件。
+## web端启动前后端
+## 启动后端
+当你配置好环境之后（假设你已经配置好了全局的Python解释器，下同），在根目录打开终端输入：
+```
+cd backend
+python app.py
+```
+出现类似的输出就是启动成功：
+![[Pasted image 20260415022055.png]]
+## 启动前端
+第一次启动前端的时候，在根目录打开终端输入：
+```
+cd frontend
+npm install（本命令只在初次初次初始化前端时使用）
+npm run build
+npm run dev
+```
+出现类似的输出就是启动成功：
+![[Pasted image 20260415022840.png]]
+点击` http://localhost:5173/`进入web页面
+
+## 初始化配置密钥
+进入页面点击应用设置。配置密钥
+![[a34a74a26bdc69786975818666062ea.png]]
+![[92477119f37d0c60e745d545b6f0add.png]]
+![[3254ba8d88e69408c205b660fca4ab6.png]] 
+### 密钥配置指导
+DeepSeek API URL和token需要去官网购买，这里我们使用百度提供的免费文心一言、PaddleOCR、语音服务的API（每日提供的数量足够你完成多次面试练习）
+#### 文心一言大模型 API获取方式
+登录百度星河社区`https://aistudio.baidu.com/overview`完成实名认证：
+![[b35fb4a1d85ddd0c136ff0576648402.png]]
+![[e6da98d1e8ba5e54598a5651d16c2ee.png]]
+![[dd5906b528b5a1a3981d4dab872adc3.png]]
+复制对应的密钥即可
+#### PaddleOCR API获取方式
+登录百度星河社区`https://aistudio.baidu.com/overview`完成实名认证：
+![[4834759d1a2534a8e0992130f4e5bbe.png]]
+![[7763155a127dba1e1c9ae56555b822d.png]]![[7c5854ad6c8bdbe4e8ddfd16d8877b1.png]]
+复制对应密钥即可
+#### 百度语音 API获取方式
+完成登录和实名认证`https://cloud.baidu.com/doc/AI_REFERENCE/s/Im3zhy4w6`读取AI接入指南进行配置
+![[2d1dd3681f5008c54576049f0eb89c8.png]]
+
+## 功能简介
+### 面试配置
+提供多种面试场景配置、多种面试音色可选
+![[fa674dc496310c55a107fa5ab104938 2.png]]
+开启面试，会根据输入的简历格式调用OCR进行解析
+![[3ff3dc28d26c009ea2834f1e53740dc.png]]
+### 面试房间
+能够实现语音实时交互面试，语音转为文字实时纠错
+![[0a82c5e7499172261340e2c1c226e84.png]]
+灵活结束面试，随时随地可练习面试技能
+![[902a0f37fd36e5e4ee891f4293ce96b.png]]
+### 评估报告
+面试结束生成评估报告，能够直观分析面试过程中的不足
+![[cc8ee88dbf82050a13d88268752e583.png]]
+### 简历优化
+可以选择直接优化，也可以定制化优化方向
+![[0c679cfb61e4cdb4cbcf34f121c2488.png]]![[92feec4be55fb5283840585c3a3115d.png]]
+### 简历生成
+内置简历多种模板，集简历生成-AI优化-输出为一体的功能
+![[83192b99831554bba147f0ede46f79b.png]]
+### 我的简历
+集中化管理简历
+![[6d4a134827b6039980ec97d89ff36ee.png]]
+### 职业生涯规划指导（完善中）
+能够生成长期跟踪的职业规划指导
+![[a585649200fabd2a4aed52d6aba4c8d.png]]
