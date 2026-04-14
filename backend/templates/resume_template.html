@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 20mm 16mm 20mm;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.75;
+      color: #1a1a2e;
+      background: white;
+    }
+
+    .resume-container {
+      width: 100%;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+
+    /* ===== 个人信息 ===== */
+    h1 {
+      font-size: 20pt;
+      font-weight: 800;
+      color: #1e293b;
+      text-align: center;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+    }
+    .personal-info {
+      text-align: center;
+      color: #475569;
+      font-size: 9.5pt;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #4F46E5;
+    }
+    .personal-info p {
+      margin: 2px 0;
+    }
+    .personal-info a {
+      color: #4F46E5;
+      text-decoration: none;
+    }
+
+    /* ===== 段落标题 ===== */
+    h2 {
+      font-size: 12pt;
+      font-weight: 700;
+      color: #4F46E5;
+      border-bottom: 1.5px solid #4F46E5;
+      padding-bottom: 3px;
+      margin: 18px 0 10px;
+      letter-spacing: 1px;
+    }
+    h3 {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 8px 0 4px;
+    }
+    h4 {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #334155;
+      margin: 6px 0 3px;
+    }
+
+    /* ===== 正文 ===== */
+    .section-body {
+      margin-bottom: 4px;
+    }
+    .section-body p {
+      margin: 5px 0;
+      text-align: justify;
+    }
+
+    /* ===== 列表 ===== */
+    ul, ol {
+      margin: 6px 0 6px 18px;
+      padding: 0;
+    }
+    li {
+      margin: 3px 0;
+    }
+    li > p {
+      margin: 0;
+    }
+
+    /* ===== 表格 ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0;
+      font-size: 9.5pt;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 4px 8px;
+      text-align: left;
+    }
+    th { background: #f1f5f9; font-weight: 700; }
+
+    /* ===== 代码 ===== */
+    code {
+      background: #f1f5f9;
+      padding: 1px 3px;
+      border-radius: 2px;
+      font-size: 9pt;
+      font-family: Consolas, "Courier New", monospace;
+    }
+    pre code {
+      display: block;
+      padding: 8px;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+
+    /* ===== 分隔线 ===== */
+    hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 10px 0;
+    }
+
+    /* ===== 图片 ===== */
+    img { max-width: 100%; border-radius: 3px; }
+
+    /* ===== 强调 ===== */
+    strong { font-weight: 700; }
+    em { font-style: italic; color: #475569; }
+
+    /* ===== 链接 ===== */
+    a { color: #4F46E5; text-decoration: none; }
+
+    /* ===== 分页控制 ===== */
+    /* 每个 section 块：标题 + 内容包裹在一起 */
+    .resume-section {
+      break-inside: auto;
+    }
+    /* 标题绝不能孤立在页底 — 至少带 2 行内容 */
+    h2, h3, h4 {
+      break-after: avoid;
+      orphans: 3;
+      widows: 3;
+    }
+    /* 段落和列表项不要从中间断开 */
+    li, p {
+      break-inside: avoid;
+    }
+    /* section-body 允许跨页，但内部元素受上面规则保护 */
+    .section-body {
+      break-inside: auto;
+    }
+    /* 个人信息区域不要跨页 */
+    .personal-info-block {
+      break-inside: avoid;
+    }
+  </style>
+</head>
+<body>
+  <div class="resume-container">
+    {{ content }}
+  </div>
+</body>
+</html>

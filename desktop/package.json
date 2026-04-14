@@ -1,0 +1,74 @@
+{
+  "name": "proview-desktop",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Electron shell for ProView AI Interviewer",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "build:frontend": "powershell -ExecutionPolicy Bypass -File .\\scripts\\build-frontend.ps1",
+    "build:backend": "powershell -ExecutionPolicy Bypass -File .\\scripts\\build-backend.ps1",
+    "pack": "npm run build:frontend && npm run build:backend && powershell -ExecutionPolicy Bypass -File .\\scripts\\package-app.ps1 --dir",
+    "dist": "npm run build:frontend && npm run build:backend && powershell -ExecutionPolicy Bypass -File .\\scripts\\package-app.ps1 --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "^37.2.6",
+    "electron-builder": "^26.1.0"
+  },
+  "build": {
+    "appId": "com.proview.desktop",
+    "productName": "ProView AI Interviewer",
+    "artifactName": "${productName}-${version}-${arch}-setup.${ext}",
+    "asar": true,
+    "compression": "normal",
+    "directories": {
+      "output": "release"
+    },
+    "electronDownload": {
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
+    "files": [
+      "electron/**/*",
+      {
+        "from": "../frontend/dist",
+        "to": "frontend/dist",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "extraResources": [
+      {
+        "from": "build/backend/proview-backend",
+        "to": "backend/proview-backend",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-${arch}-portable.${ext}"
+    }
+  }
+}
