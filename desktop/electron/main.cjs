@@ -287,10 +287,10 @@ async function createSplashWindow() {
   }
 
   const window = new BrowserWindow({
-    width: 680,
-    height: 460,
-    minWidth: 680,
-    minHeight: 460,
+    width: 760,
+    height: 540,
+    minWidth: 760,
+    minHeight: 540,
     show: false,
     frame: false,
     resizable: false,

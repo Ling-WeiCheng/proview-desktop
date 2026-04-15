@@ -146,7 +146,9 @@ function handleThemeToggle(e: MouseEvent) {
 }
 
 function goLanding() {
-  window.location.href = '/'
+  const currentPageUrl = window.location.href.split('#')[0]
+  const landingUrl = new URL('index.html', currentPageUrl)
+  window.location.assign(landingUrl.toString())
 }
 
 function openSettings() {
