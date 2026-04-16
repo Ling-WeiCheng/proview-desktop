@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import requests
 import base64
+import sys
 import cv2
 import numpy as np
 from PIL import Image
@@ -18,6 +19,32 @@ IMAGE_FILE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp", ".heic", ".he
 ENV_PATH = get_env_file_path()
 PROCESSED_DIR = str(get_app_data_path("processed_images", is_dir=True))  # 预处理后的中间图片保存目录
 OUTPUT_DIR = str(get_app_data_path("ocr_outputs", is_dir=True)) # 识别结果 MD 文档保存目录
+
+
+def _safe_log(message: object) -> None:
+    """Write logs without crashing on legacy Windows encodings such as GBK."""
+    text = str(message)
+    try:
+        print(text)
+        return
+    except UnicodeEncodeError:
+        pass
+
+    stream = getattr(sys, "stdout", None)
+    if stream is None:
+        return
+
+    encoding = getattr(stream, "encoding", None) or "utf-8"
+    payload = (text + "\n").encode(encoding, errors="backslashreplace")
+
+    buffer = getattr(stream, "buffer", None)
+    if buffer is not None:
+        buffer.write(payload)
+        stream.flush()
+        return
+
+    stream.write(payload.decode(encoding, errors="replace"))
+    stream.flush()
 
 
 def get_ocr_runtime_settings() -> tuple[str, str]:
@@ -180,16 +207,16 @@ def perform_ocr(image_path: str, use_preprocessing: bool = True, is_screen_captu
         }
 
         # 5. 调用云端 API
-        print(f"🔍 调用 OCR API: {api_url}")
-        print(f"🔍 API Token (前20字符): {api_token[:20] if api_token else 'None'}...")
-        print(f"🔍 文件类型: {file_type}")
-        print(f"🔍 Base64 长度: {len(file_data)}")
+        _safe_log(f"[OCR] 调用 OCR API: {api_url}")
+        _safe_log(f"[OCR] API Token (前20字符): {api_token[:20] if api_token else 'None'}...")
+        _safe_log(f"[OCR] 文件类型: {file_type}")
+        _safe_log(f"[OCR] Base64 长度: {len(file_data)}")
 
         response = requests.post(api_url, json=payload, headers=headers, timeout=60)
-        print(f"🔍 响应状态码: {response.status_code}")
+        _safe_log(f"[OCR] 响应状态码: {response.status_code}")
 
         if response.status_code != 200:
-            print(f"❌ 响应内容: {response.text[:500]}")
+            _safe_log(f"[OCR][ERROR] 响应内容: {response.text[:500]}")
 
         response.raise_for_status()
         result_data = response.json()
@@ -238,7 +265,7 @@ def perform_ocr(image_path: str, use_preprocessing: bool = True, is_screen_captu
                         img_f.write(base64.b64decode(img_url))
                     saved_images[img_name] = img_save_path
             except Exception as e:
-                print(f"⚠️ 图片保存失败 {img_name}: {e}")
+                _safe_log(f"[OCR][WARN] 图片保存失败 {img_name}: {e}")
 
         with open(save_path, "w", encoding="utf-8") as f:
             f.write(final_md)
@@ -256,7 +283,7 @@ def perform_ocr(image_path: str, use_preprocessing: bool = True, is_screen_captu
     except Exception as e:
         import traceback
         error_detail = traceback.format_exc()
-        print(f"❌ OCR 详细错误:\n{error_detail}")
+        _safe_log(f"[OCR][ERROR] OCR 详细错误:\n{error_detail}")
         return f"错误: OCR 执行失败 - {str(e)}"
 
 

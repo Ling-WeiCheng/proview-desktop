@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from flask import Flask, request, jsonify, send_file, Response
 from flask_cors import CORS
+from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 import config as app_config
 from config import (
@@ -141,6 +142,50 @@ def _get_server_port() -> int:
         return port
     print(f"[WARN] Out-of-range PROVIEW_API_PORT={raw_port!r}, fallback to 5000")
     return 5000
+
+
+def _is_truthy_env(value: object) -> bool:
+    return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _should_enable_debug_mode() -> bool:
+    for key in ("PROVIEW_DEBUG", "FLASK_DEBUG"):
+        raw_value = os.getenv(key)
+        if raw_value is not None and str(raw_value).strip():
+            return _is_truthy_env(raw_value)
+
+    if _is_truthy_env(os.getenv("PROVIEW_DESKTOP_MODE")):
+        return False
+
+    return True
+
+
+def _is_api_request() -> bool:
+    return str(request.path or "").startswith("/api/")
+
+
+@app.errorhandler(HTTPException)
+def _handle_api_http_exception(exc):
+    if not _is_api_request():
+        return exc
+
+    return jsonify({
+        "status": "error",
+        "message": exc.description or exc.name,
+    }), exc.code
+
+
+@app.errorhandler(Exception)
+def _handle_api_unexpected_exception(exc):
+    traceback.print_exc()
+
+    if not _is_api_request():
+        return "Internal Server Error", 500
+
+    return jsonify({
+        "status": "error",
+        "message": "服务器内部错误，请稍后重试。",
+    }), 500
 
 
 def _build_server_url(host: str, port: int) -> str:
@@ -2993,7 +3038,9 @@ def _do_tts():
 if __name__ == '__main__':
     server_host = _get_server_host()
     server_port = _get_server_port()
+    debug_enabled = _should_enable_debug_mode()
     _assert_server_bindable(server_host, server_port)
     print(f"ProView API 服务监听地址: {_build_server_url(server_host, server_port)}")
+    print(f"ProView API 调试模式: {'ON' if debug_enabled else 'OFF'}")
     # 禁用 reloader 避免与 Playwright 冲突
-    app.run(debug=True, host=server_host, port=server_port, use_reloader=False, threaded=True)
+    app.run(debug=debug_enabled, host=server_host, port=server_port, use_reloader=False, threaded=True)
