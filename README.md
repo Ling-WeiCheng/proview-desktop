@@ -11,7 +11,7 @@
 
 <br>
 
-![主界面浏览](img/imgv3/主界面浏览.gif)
+<video src="https://github.com/user-attachments/assets/bf57d908-882b-4808-a041-b4a4edae40db" controls="controls" width="500" height="300"></video>
 
 *ProView AI Interviewer — 本地优先的 AI 模拟面试工具*
 
